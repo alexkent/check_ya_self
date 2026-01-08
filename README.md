@@ -106,8 +106,6 @@ Multiple checks:
 4. ~Fork test: Attempts to fork a process (normally blocked by sandbox)~
 5. **Environment variables:** Checks for `DYLD_INSERT_LIBRARIES`
 
-**Bypass difficulty (guesstimate):** Medium - motivated attackers can bypass all checks
-
 Nb. Is block list, will inevitably become less valuable over time without maintainence. Returns `false` in simulator
 
 ---
@@ -150,7 +148,7 @@ Nb. False positives possible if legitimate tools use similar names
 - Filters out system classes without superclasses (prevents Swift runtime crashes)
 - Checks for Frida, Cycript, Substrate, Reveal, Flex, and other tool classes
 
-**Value (guesstimate):** High - very reliable detection
+**Value (guesstimate):** Medium - reliable but susceptible to collisions leading to false positives.
 
 Nb. Includes workaround for Swift runtime crashes when accessing certain system classes (see https://developer.apple.com/forums/thread/767346)
 
@@ -174,6 +172,6 @@ Detects injection-related environment variables
 - Checks for DYLD_INSERT_LIBRARIES and related variables
 - Detects Substrate environment markers
 
-**Value (guesstimate):** High - very reliable for detecting dylib injection
+**Value (guesstimate):** High - reliable for detecting dylib injection
 
 ---

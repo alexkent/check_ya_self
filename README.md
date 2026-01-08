@@ -2,11 +2,7 @@
 
 iOS application exploring Defense In Depth anti tampering and runtime integrity techniques.
 
-Detects some common iOS tampering techniques, using public APIs.
-
-## Overview
-
-We herein attempt to check validity of a number of factors relating to the app at runtime.
+We attempt to check integrity of app bundle and the runtime environment.
 
 1. Code Signature
 2. Bundle ID  

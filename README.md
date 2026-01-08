@@ -6,13 +6,14 @@ Detects some common iOS tampering techniques, using public APIs.
 
 ## Overview
 
-**'Basic' Security Checks:**
-1. Code Signature Verification
-2. Bundle ID Verification  
-3. Team ID Verification
-4. Entitlements Verification
+We herein attempt to check validity of a number of factors relating to the app at runtime.
+
+1. Code Signature
+2. Bundle ID  
+3. Team ID
+4. Entitlements
 5. Debugger Detection
-6. Jailbreak Detection (5 methods)
+6. Jailbreak Detection
 7. Dynamic Library Injection Detection
 8. Method Swizzling Detection
 9. Symbol Binding Tampering
@@ -22,15 +23,11 @@ Detects some common iOS tampering techniques, using public APIs.
 
 Several of the checks herein rely on static lists of known threats. These will age fast.
 
-Regularly review jailbreak detection paths, test with new OS versions, jailbreak releases, security incidents.
-
-## Limitations
-
 Given the general inability for an entity to verify it's own state, everything here can be bypassed by a motivated attacker. Also iOS platform limitations prevent more intrusive checks.
 
 ---
 
-## Implemented Checks
+## Checks
 
 ### 1. Code Signature Verification
 

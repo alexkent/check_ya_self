@@ -1,8 +1,8 @@
-# check_ya_self - iOS Security Implementation
+# check_ya_self - iOS Runtime environment checks
 
-iOS application exploring defense-in-depth anti-tampering and runtime integrity techniques.
+iOS application exploring Defense In Depth anti tampering and runtime integrity techniques.
 
-Detects most common iOS tampering techniques, using public APIs.
+Detects some common iOS tampering techniques, using public APIs.
 
 ## Overview
 

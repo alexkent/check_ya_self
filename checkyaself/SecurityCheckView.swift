@@ -164,11 +164,11 @@ struct SecurityCheckView: View {
         isLoading = true
         
         // Perform checks asynchronously to avoid blocking UI
-        DispatchQueue.global(qos: .userInitiated).async {
+        Task.detached {
             let checkResults = SecurityManager.performSecurityChecks()
             let advancedCheckResults = SecurityManager.performAdvancedChecks()
             
-            DispatchQueue.main.async {
+            await MainActor.run {
                 self.results = checkResults
                 self.advancedResults = advancedCheckResults
                 self.isLoading = false
@@ -218,12 +218,12 @@ struct LoadedLibrariesView: View {
     }
 
     private func loadLibraries() {
-        DispatchQueue.global(qos: .userInitiated).async {
-            let libs = SecurityManager.getLoadedLibraries()
-
-            DispatchQueue.main.async {
-                self.libraries = libs
-            }
+        Task {
+            let libs = await Task.detached(priority: .userInitiated) {
+                SecurityManager.getLoadedLibraries()
+            }.value
+            
+            self.libraries = libs
         }
     }
 }

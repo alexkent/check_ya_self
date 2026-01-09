@@ -11,8 +11,8 @@ import MachO
 import UIKit
 
 /// Manages application security and integrity checks
-class SecurityManager {
-    
+nonisolated class SecurityManager {
+
     // MARK: - Configuration
     
     /// Expected values - configure these for your app
@@ -45,7 +45,7 @@ class SecurityManager {
     }
     
     // MARK: - Code Signature Verification
-    
+
     /// Verifies the app's code signature is valid and unmodified
     static func checkCodeSignature() -> Bool {
         // Check if app is properly signed by verifying the code signature directory exists
@@ -219,10 +219,12 @@ class SecurityManager {
         }
 
         // Check 4: Check for suspicious environment variables
-        if let dyldInsertLibs = getenv("DYLD_INSERT_LIBRARIES") {
-            if String(cString: dyldInsertLibs) != "/usr/lib/libViewDebuggerSupport.dylib" { // libViewDebuggerSupport is injected by Xcode when debugging
+        if let _ /*dyldInsertLibs*/ = getenv("DYLD_INSERT_LIBRARIES") {
+            // nb. libViewDebuggerSupport is injected by Xcode when debugging
+
+//            if String(cString: dyldInsertLibs) != "/usr/lib/libViewDebuggerSupport.dylib" {
                 return true
-            }
+//            }
         }
         
         return false
@@ -328,7 +330,7 @@ class SecurityManager {
 // MARK: - Results Structure
 
 /// Results from security checks
-struct SecurityCheckResults {
+nonisolated struct SecurityCheckResults {
     var codeSignatureValid = false
     var bundleIDValid = false
     var teamIDValid = false

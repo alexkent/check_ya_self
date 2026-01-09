@@ -9,8 +9,8 @@ import Foundation
 import CommonCrypto
 import MachO
 
-class RuntimeIntegrityChecker {
-    
+nonisolated class RuntimeIntegrityChecker {
+
     // MARK: - Code Segment Checksums
     
     /// Calculates and verifies checksums of executable segments
@@ -261,28 +261,25 @@ class RuntimeIntegrityChecker {
     // MARK: - Anti-Debug Enhancement
     
     /// Continuous debugger check with timing
-    static func continuousDebuggerCheck(callback: @escaping (Bool) -> Void) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            while true {
-                var info = kinfo_proc()
-                var mib: [Int32] = [CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()]
-                var size = MemoryLayout<kinfo_proc>.stride
-                
-                let result = sysctl(&mib, UInt32(mib.count), &info, &size, nil, 0)
-                
-                if result == 0 {
-                    let debuggerAttached = (info.kp_proc.p_flag & P_TRACED) != 0
-                    if debuggerAttached {
-                        DispatchQueue.main.async {
-                            callback(true)
-                        }
-                    }
+    static func continuousDebuggerCheck() async {
+        while true {
+            var info = kinfo_proc()
+            var mib: [Int32] = [CTL_KERN, KERN_PROC, KERN_PROC_PID, getpid()]
+            var size = MemoryLayout<kinfo_proc>.stride
+            
+            let result = sysctl(&mib, UInt32(mib.count), &info, &size, nil, 0)
+            
+            if result == 0 {
+                let debuggerAttached = (info.kp_proc.p_flag & P_TRACED) != 0
+                if debuggerAttached {
+                    // Handle debugger detection - could throw, return, or notify via AsyncStream
+                    break
                 }
-                
-                // Random sleep to make timing attacks harder
-                let randomSleep = UInt32.random(in: 1_000_000...5_000_000) // 1-5 seconds
-                usleep(randomSleep)
             }
+            
+            // Random sleep to make timing attacks harder
+            let randomSleep = UInt64.random(in: 1_000_000_000...5_000_000_000) // 1-5 seconds in nanoseconds
+            try? await Task.sleep(nanoseconds: randomSleep)
         }
     }
     
@@ -311,8 +308,8 @@ class RuntimeIntegrityChecker {
 
 // MARK: - Extension for SecurityManager Integration
 
-extension SecurityManager {
-    
+nonisolated extension SecurityManager {
+
     /// Performs advanced runtime integrity checks
     static func performAdvancedChecks() -> AdvancedSecurityCheckResults {
         var results = AdvancedSecurityCheckResults()
@@ -329,7 +326,7 @@ extension SecurityManager {
 
 // MARK: - Advanced Results Structure
 
-struct AdvancedSecurityCheckResults {
+nonisolated struct AdvancedSecurityCheckResults {
     var methodSwizzlingDetected = false
     var symbolBindingTampered = false
     var injectedClassesDetected = false
